@@ -58,12 +58,17 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0Hw-L3-UlO">
+                                <rect key="frame" x="178" y="324" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" title="Movies" id="NBm-oJ-edd"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="0Hw-L3-UlO" id="QI5-nU-IwZ"/>
                         <outlet property="tableView" destination="O6x-Mv-d59" id="x6e-4x-jzj"/>
                     </connections>
                 </viewController>
@@ -138,7 +143,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xFb-BZ-qDh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="898" y="-1365"/>
+            <point key="canvasLocation" x="761" y="-1365"/>
         </scene>
         <!--Item-->
         <scene sceneID="us6-tR-jZb">
