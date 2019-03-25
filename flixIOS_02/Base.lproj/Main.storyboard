@@ -76,7 +76,7 @@
             </objects>
             <point key="canvasLocation" x="129" y="186"/>
         </scene>
-        <!--Movies Grid View Controller-->
+        <!--Movie Grid-->
         <scene sceneID="Jre-hy-hvk">
             <objects>
                 <viewController id="ldr-8P-glU" customClass="MoviesGridViewController" sceneMemberID="viewController">
@@ -110,6 +110,7 @@
                                         </view>
                                         <connections>
                                             <outlet property="posterView" destination="sRu-Zq-gHj" id="owt-j5-UNR"/>
+                                            <segue destination="b0G-z1-mv1" kind="show" id="LV6-p9-vYl"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -118,7 +119,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="X6s-Ru-b1X"/>
                     </view>
-                    <navigationItem key="navigationItem" id="t2Q-3M-1hM"/>
+                    <navigationItem key="navigationItem" title="Movie Grid" id="t2Q-3M-1hM"/>
                     <connections>
                         <outlet property="collectionView" destination="tT8-E1-CxD" id="qd4-5B-T2y"/>
                     </connections>
@@ -211,7 +212,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lQy-aT-eO3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="129" y="952"/>
+            <point key="canvasLocation" x="761" y="958"/>
         </scene>
         <!--Now Playing-->
         <scene sceneID="Whr-70-zry">
@@ -233,4 +234,7 @@
             <point key="canvasLocation" x="128.80000000000001" y="-590.55472263868069"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="LV6-p9-vYl"/>
+    </inferredMetricsTieBreakers>
 </document>

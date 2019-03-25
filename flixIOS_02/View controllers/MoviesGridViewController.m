@@ -8,6 +8,7 @@
 
 #import "MoviesGridViewController.h"
 #import "MovieCollectionCell.h"
+#import "DetailsViewController.h"
 #import "UIImageView+AFNetworking.h"
 
 @interface MoviesGridViewController () <UICollectionViewDataSource, UICollectionViewDataSource>
@@ -39,7 +40,7 @@
 - (void)fetchMovies {
     
     //Network setup
-    NSURL *url = [NSURL URLWithString:@"https://api.themoviedb.org/3/movie/now_playing?api_key=0ae44ecf86247a29c7680a2be343cf5e"];
+    NSURL *url = [NSURL URLWithString:@"https://api.themoviedb.org/3/movie/287947/similar?api_key=0ae44ecf86247a29c7680a2be343cf5e&language=en-US&page=1"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:nil delegateQueue:[NSOperationQueue mainQueue]];
     
@@ -56,8 +57,6 @@
             // Store the movies in a property to use elsewhere
             self.movies = dataDictionary[@"results"];
             
-
-            
             //Reload your table view data
             [self.collectionView reloadData];
 
@@ -68,16 +67,6 @@
     [task resume];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-     NSLog(@"Tapped movie.");
-}
-*/
 
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
     
@@ -96,7 +85,6 @@
     //set current poster image
     [cell.posterView setImageWithURL: posterUrl];
     
-    
     return cell;
 }
 
@@ -104,6 +92,22 @@
     return self.movies.count;
 }
 
+
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+    UITableViewCell *tappedCell = sender;
+    //get index path for the cell that was tapped.
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell: tappedCell];
+    NSDictionary *movie = self.movies[indexPath.item];
+    
+    DetailsViewController *detailsViewController = [segue destinationViewController];
+    detailsViewController.movie = movie;
+    NSLog(@"Tapping on a movie in gridView.");
+}
 
 
 @end
