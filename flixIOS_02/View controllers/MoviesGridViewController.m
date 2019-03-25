@@ -49,6 +49,28 @@
         //called when network called is finished
         if (error != nil) {
             NSLog(@"%@", [error localizedDescription]);
+            NSString *errorMessage = [error localizedDescription];
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:(@"%@", errorMessage) preferredStyle:(UIAlertControllerStyleAlert)];
+            //create cancel action
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                // handle cancel response here. Doing nothing will dismiss the view.
+            }];
+            
+            // add the cancel action to the alertController
+            [alert addAction:cancelAction];
+            
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                // handle cancel response here. Doing nothing will dismiss the view.
+            }];
+            
+            // add the OK action to the alert controller
+            [alert addAction:okAction];
+            
+            //show alert
+            [self presentViewController:alert animated:YES completion:^{
+                // optional code for what happens after the alert controller has finished presenting
+            }];
         }
         else {
             // Get the array of movies
