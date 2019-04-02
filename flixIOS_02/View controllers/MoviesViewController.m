@@ -11,12 +11,14 @@
 #import "DetailsViewController.h"
 #import "UIImageView+AFNetworking.h"
 
-@interface MoviesViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface MoviesViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
 
 @property (nonatomic, strong) NSArray *movies;
+@property (nonatomic, strong) NSArray *filteredMoviesArrayOfDict;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 
 @end
 
@@ -28,6 +30,7 @@
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    self.searchBar.delegate = self;
     
     [self fetchMovies];
     
@@ -82,13 +85,20 @@
             // Get the array of movies
             NSDictionary *dataDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             
-            NSLog(@"Data Dictionary: \n %@", dataDictionary);
+            //NSLog(@"Data Dictionary: \n %@", dataDictionary);
             
             // Store the movies in a property to use elsewhere
             self.movies = dataDictionary[@"results"];
+
             
             for(NSDictionary *movie in self.movies) {
-                NSLog(@"Movie in array: %@ \n", movie);
+                NSLog(@"Movie in array: %@ \n", movie[@"title"]);
+            }
+            
+            self.filteredMoviesArrayOfDict = self.movies;
+            
+            for (NSDictionary *movie in self.filteredMoviesArrayOfDict) {
+                NSLog(@"Movie filtered Dictionary title: %@ \n", movie[@"title"]);
             }
             
             //Reload your table view data
@@ -105,7 +115,7 @@
 
 // returns number for rows in the tableview
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.movies.count;
+    return self.filteredMoviesArrayOfDict.count;
 }
 
 //creates and configures cell based on index path
@@ -115,8 +125,7 @@
     //UITableViewCell *cell = [[UITableViewCell alloc] init];
     MovieCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MovieCell"];
     
-    NSDictionary *movie = self.movies[indexPath.row]; // right movie associated with the right row
-    //cell.textLabel.text = movie[@"title"];
+    NSDictionary *movie = self.filteredMoviesArrayOfDict[indexPath.row]; // right movie associated with the right row
     
     cell.titleLabel.text = movie[@"title"];
     cell.synopsisLabel.text = movie[@"overview"];
@@ -142,12 +151,31 @@
     UITableViewCell *tappedCell = sender;
     //get index path for the cell that was tapped.
     NSIndexPath *indexPath = [self.tableView indexPathForCell: tappedCell];
-    NSDictionary *movie = self.movies[indexPath.row];
+    NSDictionary *movie = self.filteredMoviesArrayOfDict[indexPath.row];
     
     DetailsViewController *detailsViewController = [segue destinationViewController];
     detailsViewController.movie = movie;
     NSLog(@"Tapping on a movie.");
 }
 
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    
+    if (searchText.length != 0) {
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(NSDictionary *evaluatedObject, NSDictionary *bindings) {
+
+            NSString* evaluatedMovie = evaluatedObject[@"title"];
+            return [evaluatedMovie containsString:searchText];
+        }];
+        
+        self.filteredMoviesArrayOfDict = [self.filteredMoviesArrayOfDict filteredArrayUsingPredicate:predicate];
+        
+        NSLog(@"%@", self.filteredMoviesArrayOfDict);
+
+    }
+    else {
+        self.filteredMoviesArrayOfDict = self.movies;
+    }
+    [self.tableView reloadData];
+}
 
 @end

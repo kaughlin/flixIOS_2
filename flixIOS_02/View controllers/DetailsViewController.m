@@ -36,6 +36,7 @@
     //convert full path to NSURL because it checks to make sure it is a valid url
     NSURL *backdropUrl = [NSURL URLWithString:fullbackdropUrlString];
     [self.backdropView setImageWithURL:backdropUrl];
+    self.backdropView.alpha = .80;
     
     self.titleLabel.text = self.movie[@"title"];
     self.synopsisLabel.text = self.movie[@"overview"];
