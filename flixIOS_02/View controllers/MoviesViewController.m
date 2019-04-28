@@ -10,11 +10,12 @@
 #import "MovieCell.h"
 #import "DetailsViewController.h"
 #import "UIImageView+AFNetworking.h"
+#import "Movie.h"
 
 @interface MoviesViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
 
 @property (nonatomic, strong) NSArray *movies;
-@property (nonatomic, strong) NSArray *filteredMoviesArrayOfDict;
+@property (nonatomic, strong) NSArray *filteredMovies;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
@@ -59,7 +60,7 @@
             NSLog(@"%@", [error localizedDescription]);
             NSString *errorMessage = [error localizedDescription];
             
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:(@"%@", errorMessage) preferredStyle:(UIAlertControllerStyleAlert)];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:((void)(@"%@"), errorMessage) preferredStyle:(UIAlertControllerStyleAlert)];
             //create cancel action
             UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                 // handle cancel response here. Doing nothing will dismiss the view.
@@ -85,21 +86,11 @@
             // Get the array of movies
             NSDictionary *dataDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             
-            //NSLog(@"Data Dictionary: \n %@", dataDictionary);
-            
             // Store the movies in a property to use elsewhere
-            self.movies = dataDictionary[@"results"];
-
-            
-            for(NSDictionary *movie in self.movies) {
-                NSLog(@"Movie in array: %@ \n", movie[@"title"]);
-            }
-            
-            self.filteredMoviesArrayOfDict = self.movies;
-            
-            for (NSDictionary *movie in self.filteredMoviesArrayOfDict) {
-                NSLog(@"Movie filtered Dictionary title: %@ \n", movie[@"title"]);
-            }
+            self.movies  = [Movie moviesWithDictionaries:dataDictionary[@"results"]];
+                 
+            // store movies in a filtered property for search
+            self.filteredMovies = self.movies;
             
             //Reload your table view data
             [self.tableView reloadData];
@@ -115,30 +106,23 @@
 
 // returns number for rows in the tableview
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.filteredMoviesArrayOfDict.count;
+    return self.filteredMovies.count;
 }
 
 //creates and configures cell based on index path
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     //create a cell
-    //UITableViewCell *cell = [[UITableViewCell alloc] init];
     MovieCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MovieCell"];
     
-    NSDictionary *movie = self.filteredMoviesArrayOfDict[indexPath.row]; // right movie associated with the right row
+    Movie *movie = self.filteredMovies[indexPath.row]; // right movie associated with the right row
     
-    cell.titleLabel.text = movie[@"title"];
-    cell.synopsisLabel.text = movie[@"overview"];
-    
-    NSString *baseURLString = @"https://image.tmdb.org/t/p/w500";
-    NSString *posterPathString = movie[@"poster_path"];
-    NSString *fullPosterUrlString = [baseURLString stringByAppendingString:posterPathString];
-    //convert full path to NSURL because it checks to make sure it is a valid url
-    NSURL *posterUrl = [NSURL URLWithString:fullPosterUrlString];
+    cell.titleLabel.text = movie.title;
+    cell.synopsisLabel.text = movie.synopsis;
     
     cell.posterView.image = nil;
     //set current poster image
-    [cell.posterView setImageWithURL: posterUrl];
+    [cell.posterView setImageWithURL: movie.posterUrl];
     return cell;
 }
 
@@ -151,29 +135,25 @@
     UITableViewCell *tappedCell = sender;
     //get index path for the cell that was tapped.
     NSIndexPath *indexPath = [self.tableView indexPathForCell: tappedCell];
-    NSDictionary *movie = self.filteredMoviesArrayOfDict[indexPath.row];
+    Movie *movie = self.filteredMovies[indexPath.row];
     
     DetailsViewController *detailsViewController = [segue destinationViewController];
     detailsViewController.movie = movie;
-    NSLog(@"Tapping on a movie.");
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     
     if (searchText.length != 0) {
-        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(NSDictionary *evaluatedObject, NSDictionary *bindings) {
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(Movie *evaluatedObject, NSDictionary *bindings) {
 
-            NSString* evaluatedMovie = evaluatedObject[@"title"];
+            NSString* evaluatedMovie = evaluatedObject.title;
             return [evaluatedMovie containsString:searchText];
         }];
         
-        self.filteredMoviesArrayOfDict = [self.filteredMoviesArrayOfDict filteredArrayUsingPredicate:predicate];
-        
-        NSLog(@"%@", self.filteredMoviesArrayOfDict);
-
+        self.filteredMovies = [self.filteredMovies filteredArrayUsingPredicate:predicate];
     }
     else {
-        self.filteredMoviesArrayOfDict = self.movies;
+        self.filteredMovies = self.movies;
     }
     [self.tableView reloadData];
 }

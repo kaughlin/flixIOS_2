@@ -51,7 +51,7 @@
             NSLog(@"%@", [error localizedDescription]);
             NSString *errorMessage = [error localizedDescription];
             
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:(@"%@", errorMessage) preferredStyle:(UIAlertControllerStyleAlert)];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:((void)(@"%@"), errorMessage) preferredStyle:(UIAlertControllerStyleAlert)];
             //create cancel action
             UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                 // handle cancel response here. Doing nothing will dismiss the view.
@@ -77,13 +77,12 @@
             NSDictionary *dataDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             
             // Store the movies in a property to use elsewhere
-            self.movies = dataDictionary[@"results"];
-            
+            self.movies  = [Movie moviesWithDictionaries:dataDictionary[@"results"]];
+
             //Reload your table view data
             [self.collectionView reloadData];
 
         }
-        //end refresh control
 
     }];
     [task resume];
@@ -95,17 +94,11 @@
     
     MovieCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"MovieCollectionCell" forIndexPath:indexPath];
     
-    NSDictionary *movie = self.movies[indexPath.item]; // right movie associated with the right row
-    
-    NSString *baseURLString = @"https://image.tmdb.org/t/p/w500";
-    NSString *posterPathString = movie[@"poster_path"];
-    NSString *fullPosterUrlString = [baseURLString stringByAppendingString:posterPathString];
-    //convert full path to NSURL because it checks to make sure it is a valid url
-    NSURL *posterUrl = [NSURL URLWithString:fullPosterUrlString];
+    Movie *movie = self.movies[indexPath.item];
     
     cell.posterView.image = nil;
     //set current poster image
-    [cell.posterView setImageWithURL: posterUrl];
+    [cell.posterView setImageWithURL: movie.posterUrl];
     
     return cell;
 }
@@ -124,11 +117,10 @@
     UITableViewCell *tappedCell = sender;
     //get index path for the cell that was tapped.
     NSIndexPath *indexPath = [self.collectionView indexPathForCell: tappedCell];
-    NSDictionary *movie = self.movies[indexPath.item];
+    Movie *movie = self.movies[indexPath.item];
     
     DetailsViewController *detailsViewController = [segue destinationViewController];
     detailsViewController.movie = movie;
-    NSLog(@"Tapping on a movie in gridView.");
 }
 
 

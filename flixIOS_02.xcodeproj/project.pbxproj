@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		10479CB02258076E00FBCEE8 /* Movie.m in Sources */ = {isa = PBXBuildFile; fileRef = 10479CAF2258076E00FBCEE8 /* Movie.m */; };
 		10D0AA2D2243F7A000001FF5 /* MoviesGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10D0AA2C2243F7A000001FF5 /* MoviesGridViewController.m */; };
 		10D0AA302243FBD900001FF5 /* MovieCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 10D0AA2F2243FBD900001FF5 /* MovieCollectionCell.m */; };
 		10EFBCFF22358D4B0013600E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 10EFBCFE22358D4B0013600E /* AppDelegate.m */; };
@@ -43,6 +44,8 @@
 
 /* Begin PBXFileReference section */
 		0A2C7D4E4528B9AB42CAC777 /* libPods-flixIOS_02.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-flixIOS_02.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		10479CAE2258076E00FBCEE8 /* Movie.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Movie.h; sourceTree = "<group>"; };
+		10479CAF2258076E00FBCEE8 /* Movie.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Movie.m; sourceTree = "<group>"; };
 		10D0AA2B2243F7A000001FF5 /* MoviesGridViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MoviesGridViewController.h; sourceTree = "<group>"; };
 		10D0AA2C2243F7A000001FF5 /* MoviesGridViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MoviesGridViewController.m; sourceTree = "<group>"; };
 		10D0AA2E2243FBD900001FF5 /* MovieCollectionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MovieCollectionCell.h; sourceTree = "<group>"; };
@@ -189,6 +192,8 @@
 		10EFBD3422359CC30013600E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				10479CAE2258076E00FBCEE8 /* Movie.h */,
+				10479CAF2258076E00FBCEE8 /* Movie.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -420,6 +425,7 @@
 			files = (
 				10EFBD0D22358D4D0013600E /* main.m in Sources */,
 				10EFBD3A2241738B0013600E /* DetailsViewController.m in Sources */,
+				10479CB02258076E00FBCEE8 /* Movie.m in Sources */,
 				10EFBCFF22358D4B0013600E /* AppDelegate.m in Sources */,
 				10D0AA302243FBD900001FF5 /* MovieCollectionCell.m in Sources */,
 				10EFBD37223ABBEF0013600E /* MovieCell.m in Sources */,
